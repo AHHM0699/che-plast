@@ -14,307 +14,309 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
   <style>
-    /* ── CHICHA PERUANA ──────────────────────────────
-       Paleta inspirada en los afiches chicha:
-       amarillo dorado · rosa fuerte · naranja · verde neón
-    ─────────────────────────────────────────────── */
+    /* ── CHICHA PERUANA ───────────────────────────── */
     :root {
-      --bg:        #0d0800;
-      --bg2:       #1a1000;
-      --border:    #3d2200;
-      --yellow:    #FFD700;
-      --pink:      #FF006E;
-      --orange:    #FF5500;
-      --green:     #00E676;
-      --red:       #CC0033;
-      --dim:       #CC8833;
-      --bright:    #FFB833;
-      --bar-h:     46px;
-      --safe-top:  env(safe-area-inset-top, 0px);
-      --safe-bot:  env(safe-area-inset-bottom, 0px);
+      --bg:      #0d0800;
+      --bg2:     #1a1000;
+      --border:  #3d2200;
+      --yellow:  #FFD700;
+      --pink:    #FF006E;
+      --orange:  #FF5500;
+      --red:     #CC0033;
+      --dim:     #CC8833;
+      --bright:  #FFB833;
+      --bar-h:   46px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body {
-      height: 100%;
-      overflow: hidden;
+      height: 100%; overflow: hidden;
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       background: var(--bg);
       -webkit-tap-highlight-color: transparent;
       -webkit-text-size-adjust: 100%;
     }
 
-    /* ── SHELL ───────────────────────────────────── */
-    #shell {
-      display: flex;
+    /* ════════════════════════════════════════════════
+       PANTALLA DE CREDENCIALES (primer inicio)
+    ════════════════════════════════════════════════ */
+    #setup {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at center, #1f0c00 0%, #0d0800 70%);
+      padding: var(--safe-top) 24px var(--safe-bot);
+      gap: 0;
+    }
+    #setup-card {
+      width: 100%; max-width: 380px;
+      display: flex; flex-direction: column; align-items: center; gap: 18px;
+    }
+    #setup img {
+      width: 80px; height: 80px; border-radius: 18px;
+      box-shadow: 0 0 30px rgba(255,215,0,.4);
+    }
+    #setup h1 {
+      font-size: 28px; font-weight: 900; letter-spacing: .14em;
+      color: var(--yellow);
+      text-shadow: 0 0 20px rgba(255,215,0,.5);
+    }
+    #setup p {
+      font-size: 13px; color: var(--dim);
+      text-align: center; letter-spacing: .02em;
+      margin-top: -8px;
+    }
+    .setup-field {
+      width: 100%; position: relative;
+    }
+    .setup-field label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: var(--dim); letter-spacing: .08em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .setup-field input {
+      width: 100%; padding: 12px 14px;
+      background: #1a1000; border: 2px solid var(--border);
+      border-radius: 8px; color: #fff; font-size: 15px;
+      outline: none; transition: border-color .15s;
+    }
+    .setup-field input:focus { border-color: var(--yellow); }
+    .setup-field input::placeholder { color: #664422; }
+    #setup-divider {
+      width: 100%; border: none;
+      border-top: 1px solid var(--border); margin: 4px 0;
+    }
+    #btn-setup {
+      width: 100%; padding: 14px;
+      background: var(--pink); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 900;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer; transition: background .15s;
+      box-shadow: 0 4px 20px rgba(255,0,110,.4);
+    }
+    #btn-setup:hover { background: #FF3399; }
+    #setup-hint {
+      font-size: 11px; color: #664422;
+      text-align: center;
+    }
+
+    /* ════════════════════════════════════════════════
+       APP PRINCIPAL
+    ════════════════════════════════════════════════ */
+    #app {
+      display: none;   /* visible tras setup */
       flex-direction: column;
       height: 100%;
       padding-top: var(--safe-top);
       padding-bottom: var(--safe-bot);
     }
+    #app.visible { display: flex; }
 
-    /* ── LOGIN TOP ───────────────────────────────── */
-    #login-top {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #200a00, #0d0800);
-      border-bottom: 3px solid var(--yellow);
-      flex-shrink: 0;
-    }
-    #login-top img {
-      width: 38px; height: 38px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,215,0,.5);
-    }
-    #login-logo-text {
-      display: flex;
-      flex-direction: column;
-    }
-    #login-logo-text h1 {
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--yellow);
-      letter-spacing: .12em;
-      text-shadow: 0 0 14px rgba(255,215,0,.5);
-    }
-    #login-logo-text p {
-      font-size: 11px;
-      color: var(--dim);
-      letter-spacing: .04em;
-    }
-
-    /* ── LOGIN BOTTOM ────────────────────────────── */
-    #login-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding: 14px 20px;
-      background: linear-gradient(90deg, #0d0800, #200a00);
-      border-top: 3px solid var(--pink);
-      flex-shrink: 0;
-    }
-    #login-hint {
-      font-size: 12px;
-      color: var(--dim);
-      text-align: center;
-    }
-    #btn-continue {
-      padding: 11px 28px;
-      background: var(--pink);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background .15s, box-shadow .15s;
-      box-shadow: 0 4px 18px rgba(255,0,110,.4);
-      white-space: nowrap;
-    }
-    #btn-continue:hover  { background: #FF3399; box-shadow: 0 4px 22px rgba(255,0,110,.6); }
-    #btn-continue:active { transform: scale(.97); }
-
-    /* ── TAB BAR ─────────────────────────────────── */
+    /* ── BARRA DE PESTAÑAS ────────────────────────── */
     #tab-bar {
-      display: none;
-      align-items: stretch;
-      background: var(--bg);
-      height: var(--bar-h);
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: none;
-      flex-shrink: 0;
+      display: flex; align-items: stretch;
+      background: var(--bg); height: var(--bar-h);
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; flex-shrink: 0;
       border-bottom: 2px solid var(--border);
       -webkit-overflow-scrolling: touch;
     }
-    #tab-bar.visible { display: flex; }
     #tab-bar::-webkit-scrollbar { display: none; }
 
-    /* ── TAB ─────────────────────────────────────── */
     .tab {
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      display: flex; align-items: center; gap: 5px;
       padding: 0 14px;
-      min-width: 110px;
-      max-width: 175px;
-      min-height: var(--bar-h);
-      white-space: nowrap;
-      cursor: pointer;
-      color: var(--dim);
-      font-size: 13px;
-      font-weight: 600;
-      flex-shrink: 0;
-      border-right: 1px solid var(--border);
+      min-width: 110px; max-width: 170px; min-height: var(--bar-h);
+      white-space: nowrap; cursor: pointer;
+      color: var(--dim); font-size: 13px; font-weight: 600;
+      flex-shrink: 0; border-right: 1px solid var(--border);
       transition: background .15s, color .12s;
-      user-select: none;
-      -webkit-user-select: none;
+      user-select: none; -webkit-user-select: none;
       position: relative;
     }
     .tab:hover { background: var(--bg2); color: var(--bright); }
-    .tab.active {
-      background: var(--yellow);
-      color: #0d0800;
-      font-weight: 800;
-    }
+    .tab.active { background: var(--yellow); color: #0d0800; font-weight: 800; }
     .tab.active::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
       background: var(--pink);
     }
     .tab-label { overflow: hidden; text-overflow: ellipsis; flex: 1; }
 
-    /* ── CLOSE ───────────────────────────────────── */
     .tab-close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 19px; height: 19px;
-      border: none;
-      background: transparent;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 11px;
-      flex-shrink: 0;
-      color: inherit;
-      opacity: .5;
+      display: flex; align-items: center; justify-content: center;
+      width: 19px; height: 19px; border: none;
+      background: transparent; border-radius: 50%;
+      cursor: pointer; font-size: 11px; flex-shrink: 0;
+      color: inherit; opacity: .5;
       transition: background .12s, opacity .12s;
     }
     .tab-close:hover { background: var(--orange); color: #fff; opacity: 1; }
 
-    /* ── NUEVO COMPROBANTE BTN ───────────────────── */
-    #btn-new {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 16px;
-      min-height: var(--bar-h);
+    /* ── BOTONES DERECHA DE LA BARRA ──────────────── */
+    .bar-right {
+      display: flex; align-items: stretch;
+      margin-left: auto; flex-shrink: 0;
+    }
+
+    /* Botón ⟳ Recargar */
+    #btn-reload {
+      display: flex; align-items: center; justify-content: center;
+      width: 46px; min-height: var(--bar-h);
+      border: none; border-left: 1px solid var(--border);
+      background: var(--bg2); color: var(--dim);
+      font-size: 18px; cursor: pointer;
+      transition: background .15s, color .15s;
       flex-shrink: 0;
-      border: none;
-      background: var(--orange);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      cursor: pointer;
-      white-space: nowrap;
-      margin-left: auto;
+    }
+    #btn-reload:hover { background: var(--border); color: var(--yellow); }
+    #btn-reload:active { color: var(--pink); }
+    #btn-reload title { display: none; }
+
+    /* Botón + Nuevo Comprobante */
+    #btn-new {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 16px; min-height: var(--bar-h);
+      border: none; border-left: 1px solid var(--border);
+      background: var(--orange); color: #fff;
+      font-size: 13px; font-weight: 800;
+      letter-spacing: .04em; text-transform: uppercase;
+      cursor: pointer; white-space: nowrap;
       transition: background .15s;
     }
     #btn-new:hover { background: var(--pink); }
 
-    /* ── CONTENT ─────────────────────────────────── */
+    /* ── CONTENIDO ────────────────────────────────── */
     #content {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: var(--bg);
+      flex: 1; position: relative;
+      overflow: hidden; background: var(--bg);
     }
-
     .frame-wrap {
-      position: absolute;
-      inset: 0;
-      display: none;
-      overflow: auto;
+      position: absolute; inset: 0;
+      display: none; overflow: auto;
       -webkit-overflow-scrolling: touch;
     }
     .frame-wrap.active { display: block; }
-
-    /* Loading shimmer */
     .frame-wrap::before {
       content: 'Cargando…';
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      color: var(--dim);
-      font-size: 15px;
-      font-weight: 600;
-      pointer-events: none;
-      transition: opacity .4s;
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg); color: var(--dim);
+      font-size: 15px; font-weight: 600;
+      pointer-events: none; transition: opacity .4s;
     }
-    .frame-wrap.loaded::before { opacity: 0; }
+    .frame-wrap.loaded::before { opacity: 0; pointer-events: none; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+    /* ════════════════════════════════════════════════
+       FAB — credenciales flotante
+       Visible solo en pestañas de organizatic
+    ════════════════════════════════════════════════ */
+    #fab {
+      position: fixed; bottom: 20px; right: 16px;
+      display: none;
+      background: #1a1000;
+      border: 2px solid var(--yellow);
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.6);
+      z-index: 50;
+      flex-direction: column; gap: 8px;
+      min-width: 200px;
     }
+    #fab.show { display: flex; }
+    #fab-user {
+      font-size: 12px; color: var(--dim); letter-spacing: .04em;
+    }
+    #fab-user strong { color: var(--bright); font-size: 13px; }
+    .fab-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border: none; border-radius: 7px;
+      cursor: pointer; font-size: 13px; font-weight: 700;
+      transition: background .15s; width: 100%;
+    }
+    #fab-copy-user { background: var(--bg2); color: var(--bright); }
+    #fab-copy-user:hover { background: var(--border); }
+    #fab-copy-pass { background: var(--pink); color: #fff; }
+    #fab-copy-pass:hover { background: #FF3399; }
 
-    /* ── TOAST ───────────────────────────────────── */
+    /* ── TOAST ────────────────────────────────────── */
     #toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(10px);
-      background: var(--yellow);
-      color: #0d0800;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 800;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s, transform .2s;
-      z-index: 9999;
+      background: var(--yellow); color: #0d0800;
+      padding: 8px 20px; border-radius: 20px;
+      font-size: 13px; font-weight: 800;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s, transform .2s; z-index: 9999;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── MOBILE ──────────────────────────────────── */
+    /* ── MOBILE ───────────────────────────────────── */
     @media (max-width: 600px) {
       :root { --bar-h: 44px; }
       .tab { min-width: 80px; padding: 0 10px; font-size: 12px; }
-      #btn-new { padding: 0 10px; font-size: 11px; gap: 4px; }
-      #login-hint { display: none; }
-      #btn-continue { padding: 10px 20px; font-size: 13px; }
+      #btn-new { padding: 0 10px; font-size: 11px; gap: 3px; }
+      #btn-reload { width: 40px; font-size: 16px; }
+      #fab { bottom: 70px; right: 12px; }
     }
   </style>
 </head>
 
 <body>
-<div id="shell">
 
-  <!-- ── Login header ──────────────────────────── -->
-  <div id="login-top">
+<!-- ════════════════════════════════════════════
+     PANTALLA DE CREDENCIALES
+════════════════════════════════════════════ -->
+<div id="setup">
+  <div id="setup-card">
     <img src="icons/apple-touch-icon.png" alt="Che Plast">
-    <div id="login-logo-text">
-      <h1>CHE PLAST</h1>
-      <p>Sistema de gestión interno</p>
+    <h1>CHE PLAST</h1>
+    <p>Ingresá tus credenciales una vez.<br>El sistema las usará en todas las pestañas.</p>
+    <hr id="setup-divider">
+    <div class="setup-field">
+      <label for="input-user">Usuario</label>
+      <input type="text" id="input-user" placeholder="Tu usuario" autocomplete="username" spellcheck="false">
+    </div>
+    <div class="setup-field">
+      <label for="input-pass">Contraseña</label>
+      <input type="password" id="input-pass" placeholder="Tu contraseña" autocomplete="current-password">
+    </div>
+    <button id="btn-setup">Abrir sistema &nbsp;&#x279C;</button>
+    <p id="setup-hint">Al activar cada pestaña, la contraseña se copia automáticamente al portapapeles.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     APP PRINCIPAL
+════════════════════════════════════════════ -->
+<div id="app">
+  <div id="tab-bar">
+    <!-- pestañas inyectadas por JS -->
+    <div class="bar-right">
+      <button id="btn-reload" title="Recargar pestaña activa (también F5)">&#x27F3;</button>
+      <button id="btn-new">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+          <path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        Nuevo Comprobante
+      </button>
     </div>
   </div>
-
-  <!-- ── Tab bar (hidden until login complete) ─── -->
-  <div id="tab-bar">
-    <button id="btn-new">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-        <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      </svg>
-      Nuevo Comprobante
-    </button>
-  </div>
-
-  <!-- ── Content: iframes viven aquí siempre ───── -->
   <div id="content"></div>
-
-  <!-- ── Login footer ──────────────────────────── -->
-  <div id="login-bottom">
-    <span id="login-hint">Iniciá sesión en el formulario de arriba, luego presioná el botón →</span>
-    <button id="btn-continue">Ya ingresé &mdash; Continuar &#x279C;</button>
-  </div>
-
 </div>
+
+<!-- ════════════════════════════════════════════
+     FAB: credenciales flotante
+════════════════════════════════════════════ -->
+<div id="fab">
+  <div id="fab-user">Usuario: <strong id="fab-username-txt"></strong></div>
+  <button class="fab-btn" id="fab-copy-user">&#x1F464; Copiar usuario</button>
+  <button class="fab-btn" id="fab-copy-pass">&#x1F511; Copiar contraseña</button>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -322,69 +324,86 @@
    CONFIG
 ──────────────────────────────────────────────── */
 const ORG_BASE = 'https://cheplast.organizatic.com/principal';
-
-// Las 3 pestañas de organizatic comparten UN SOLO iframe
-// Esto elimina por completo el conflicto de sesión/credenciales
 const ORG_TABS = [
-  { label: 'Inicio',         hash: '#/' },
-  { label: 'Notas de Venta', hash: '#/notas-venta' },
-  { label: 'Documentos',     hash: '#/documentos' },
+  { label: 'Inicio',         url: ORG_BASE + '#/' },
+  { label: 'Notas de Venta', url: ORG_BASE + '#/notas-venta' },
+  { label: 'Documentos',     url: ORG_BASE + '#/documentos' },
 ];
 const CAJA_URL  = 'https://ahhm0699.github.io/PROGRAMA-CAJA/';
 const DYN_LABEL = 'Nuevo Comprobante';
 const DYN_URL   = ORG_BASE + '#/documentos/crear';
+const ORG_COUNT = ORG_TABS.length;
+
+/* ────────────────────────────────────────────────
+   CREDENCIALES (en memoria + username en storage)
+──────────────────────────────────────────────── */
+let CRED = { user: '', pass: '' };
 
 /* ────────────────────────────────────────────────
    DOM
 ──────────────────────────────────────────────── */
-const loginTop    = document.getElementById('login-top');
-const loginBottom = document.getElementById('login-bottom');
+const setupEl     = document.getElementById('setup');
+const appEl       = document.getElementById('app');
 const tabBar      = document.getElementById('tab-bar');
+const barRight    = tabBar.querySelector('.bar-right');
 const btnNew      = document.getElementById('btn-new');
-const content     = document.getElementById('content');
-const toast       = document.getElementById('toast');
-const btnContinue = document.getElementById('btn-continue');
+const btnReload   = document.getElementById('btn-reload');
+const contentEl   = document.getElementById('content');
+const toastEl     = document.getElementById('toast');
+const fab         = document.getElementById('fab');
+const fabUserTxt  = document.getElementById('fab-username-txt');
+const inputUser   = document.getElementById('input-user');
+const inputPass   = document.getElementById('input-pass');
+const btnSetup    = document.getElementById('btn-setup');
 
 /* ────────────────────────────────────────────────
    TOAST
 ──────────────────────────────────────────────── */
 let toastTimer;
-function showToast(msg, ms = 1800) {
-  toast.textContent = msg;
-  toast.classList.add('show');
+function showToast(msg, ms = 2200) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), ms);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), ms);
 }
 
 /* ────────────────────────────────────────────────
-   IFRAME COMPARTIDO para las 3 pestañas organizatic
-   Un solo contexto de sesión → sin conflictos de login
+   CLIPBOARD
 ──────────────────────────────────────────────── */
-const orgWrap = document.createElement('div');
-orgWrap.className = 'frame-wrap active';  // visible durante login
-
-const orgFrame = document.createElement('iframe');
-orgFrame.src = ORG_BASE + '#/';          // carga el login de organizatic
-orgFrame.allow = 'clipboard-read; clipboard-write; fullscreen';
-orgFrame.addEventListener('load', () => orgWrap.classList.add('loaded'));
-orgWrap.appendChild(orgFrame);
-content.appendChild(orgWrap);
-
-let activeOrgHash = '#/';   // hash actualmente cargado en orgFrame
+async function copyText(text, label) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast(`${label} copiado/a — pegá con Ctrl+V`);
+  } catch {
+    showToast(`${label}: ${text}`);  // fallback: show it
+  }
+}
 
 /* ────────────────────────────────────────────────
    ESTADO DE PESTAÑAS
 ──────────────────────────────────────────────── */
-let tabs    = [];  // { id, el, label, isOrg, orgHash?, wrap?, frame?, fixed }
-let active  = 0;
-let loggedIn = false;
-let uid      = 0;
+let tabs   = [];   // { id, el, wrap, frame, isOrg, fixed, _loaded }
+let active = 0;
+let uid    = 0;
 
 /* ────────────────────────────────────────────────
-   CREAR ELEMENTO PESTAÑA (solo UI)
+   CREAR PESTAÑA + IFRAME
 ──────────────────────────────────────────────── */
-function makeTabEl(label, fixed, meta) {
+function addTab(label, url, fixed, isOrg) {
   const id = 't' + (++uid);
+
+  // — Iframe wrapper
+  const wrap  = document.createElement('div');
+  wrap.className = 'frame-wrap';
+  const frame = document.createElement('iframe');
+  frame.dataset.src = url;
+  frame._loaded = false;
+  frame.allow   = 'clipboard-read; clipboard-write; fullscreen';
+  frame.addEventListener('load', () => wrap.classList.add('loaded'));
+  wrap.appendChild(frame);
+  contentEl.appendChild(wrap);
+
+  // — Pestaña UI
   const el = document.createElement('div');
   el.className = 'tab';
   el.setAttribute('role', 'tab');
@@ -392,12 +411,12 @@ function makeTabEl(label, fixed, meta) {
   el.innerHTML = `<span class="tab-label" title="${label}">${label}</span>`;
 
   if (!fixed) {
-    const btn = document.createElement('button');
-    btn.className = 'tab-close';
-    btn.innerHTML = '&#x2715;';
-    btn.setAttribute('aria-label', 'Cerrar');
-    btn.addEventListener('click', e => { e.stopPropagation(); removeTab(id); });
-    el.appendChild(btn);
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'tab-close';
+    closeBtn.innerHTML = '&#x2715;';
+    closeBtn.setAttribute('aria-label', 'Cerrar');
+    closeBtn.addEventListener('click', e => { e.stopPropagation(); removeTab(id); });
+    el.appendChild(closeBtn);
   }
 
   el.addEventListener('click', () => {
@@ -405,7 +424,7 @@ function makeTabEl(label, fixed, meta) {
     if (i >= 0) setActive(i);
   });
 
-  // Doble toque en pestaña activa = recargar (móvil)
+  // Doble toque = recargar (móvil)
   let lastTap = 0;
   el.addEventListener('touchend', () => {
     const now = Date.now();
@@ -414,40 +433,11 @@ function makeTabEl(label, fixed, meta) {
     lastTap = now;
   });
 
-  tabBar.insertBefore(el, btnNew);
-  const entry = { id, el, label, fixed, ...meta };
-  tabs.push(entry);
+  // Insertar antes de .bar-right
+  tabBar.insertBefore(el, barRight);
+
+  tabs.push({ id, el, wrap, frame, isOrg, fixed, _loaded: false });
   return tabs.length - 1;
-}
-
-/* ────────────────────────────────────────────────
-   PESTAÑA CON IFRAME PROPIO (Caja + dinámicas)
-──────────────────────────────────────────────── */
-function addIframeTab(label, url, fixed) {
-  const wrap  = document.createElement('div');
-  wrap.className = 'frame-wrap';
-  const frame = document.createElement('iframe');
-  frame.dataset.src = url;
-  frame._loaded = false;
-  frame.allow = 'clipboard-read; clipboard-write; fullscreen';
-  frame.addEventListener('load', () => wrap.classList.add('loaded'));
-  wrap.appendChild(frame);
-  content.appendChild(wrap);
-  return makeTabEl(label, fixed, { isOrg: false, wrap, frame });
-}
-
-/* ────────────────────────────────────────────────
-   PESTAÑA DINÁMICA (Nuevo Comprobante)
-──────────────────────────────────────────────── */
-function addDynamic() {
-  const i = addIframeTab(DYN_LABEL, DYN_URL, false);
-  setActive(i);
-  // Carga inmediata (el usuario la abrió a propósito)
-  const t = tabs[i];
-  if (!t.frame._loaded) {
-    t.frame.src = t.frame.dataset.src;
-    t.frame._loaded = true;
-  }
 }
 
 /* ────────────────────────────────────────────────
@@ -455,126 +445,151 @@ function addDynamic() {
 ──────────────────────────────────────────────── */
 function removeTab(id) {
   const dynCount = tabs.filter(t => !t.fixed).length;
-  if (dynCount <= 1) {
-    showToast('Debe quedar al menos un comprobante abierto');
-    return;
-  }
+  if (dynCount <= 1) { showToast('Debe quedar al menos un comprobante abierto'); return; }
   const i = tabs.findIndex(t => t.id === id);
   if (i < 0 || tabs[i].fixed) return;
   tabs[i].el.remove();
-  tabs[i].wrap?.remove();
+  tabs[i].wrap.remove();
   tabs.splice(i, 1);
   setActive(Math.min(active, tabs.length - 1));
 }
 
 /* ────────────────────────────────────────────────
    ACTIVAR PESTAÑA
+   — Si es de organizatic y es la primera vez que
+     se abre, copia la contraseña al portapapeles
+     automáticamente.
 ──────────────────────────────────────────────── */
 function setActive(i) {
   active = i;
   const t = tabs[i];
   if (!t) return;
 
+  const wasLoaded = t._loaded;
+
   tabs.forEach((tt, idx) => {
     const on = idx === i;
     tt.el.classList.toggle('active', on);
     tt.el.setAttribute('aria-selected', String(on));
-
-    if (!tt.isOrg && tt.wrap) {
-      tt.wrap.classList.toggle('active', on);
-      // Carga lazy: solo carga cuando se activa por primera vez
-      if (on && !tt.frame._loaded) {
-        tt.frame.src = tt.frame.dataset.src;
-        tt.frame._loaded = true;
-      }
+    tt.wrap.classList.toggle('active', on);
+    if (on && !tt._loaded) {
+      tt.frame.src = tt.frame.dataset.src;
+      tt._loaded = true;
     }
   });
 
+  // FAB de credenciales: solo en pestañas org
   if (t.isOrg) {
-    // Mostrar iframe compartido y navegar al hash correspondiente
-    orgWrap.classList.add('active');
-    if (t.orgHash !== activeOrgHash) {
-      orgFrame.src = ORG_BASE + t.orgHash;
-      activeOrgHash = t.orgHash;
+    fab.classList.add('show');
+    // Primera activación → auto-copia contraseña
+    if (!wasLoaded && CRED.pass) {
+      navigator.clipboard.writeText(CRED.pass).then(() => {
+        showToast('🔑 Contraseña copiada — pegá con Ctrl+V en el campo');
+      }).catch(() => {
+        showToast('Usá el botón 🔑 para copiar la contraseña');
+      });
     }
   } else {
-    orgWrap.classList.remove('active');
+    fab.classList.remove('show');
   }
 
   tabs[i].el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
 /* ────────────────────────────────────────────────
-   RECARGAR PESTAÑA ACTIVA (F5 / doble toque)
+   RECARGAR PESTAÑA ACTIVA
+   El botón ⟳ es la forma confiable de recargar.
+   F5 también se intenta interceptar (ver abajo),
+   pero puede no funcionar si el iframe tiene foco.
 ──────────────────────────────────────────────── */
 function reloadActive() {
   const t = tabs[active];
   if (!t) return;
-
-  if (t.isOrg) {
-    // Recarga forzada con query único (preserva sessionStorage del iframe)
-    orgWrap.classList.remove('loaded');
-    orgFrame.src = ORG_BASE + '?r=' + Date.now() + t.orgHash;
-    activeOrgHash = t.orgHash;
-  } else {
-    const src = t.frame.dataset.src;
-    t.wrap.classList.remove('loaded');
-    t.frame._loaded = false;
-    t.frame.src = 'about:blank';
-    setTimeout(() => {
-      t.frame.src = src;
-      t.frame._loaded = true;
-    }, 30);
-  }
+  const src = t.frame.dataset.src;
+  t.wrap.classList.remove('loaded');
+  t._loaded = false;
+  t.frame.src = 'about:blank';
+  setTimeout(() => {
+    t.frame.src = src;
+    t._loaded = true;
+  }, 30);
   showToast('Recargando…');
 }
 
 /* ────────────────────────────────────────────────
-   INIT: construir pestañas ANTES del login
-   (iframes org y caja no cargan hasta que el
-    usuario haga clic en ellas, excepto el orgFrame
-    que carga el login de organizatic de inmediato)
+   PESTAÑA DINÁMICA
 ──────────────────────────────────────────────── */
-ORG_TABS.forEach(t => makeTabEl(t.label, true, { isOrg: true, orgHash: t.hash }));
-addIframeTab('Caja', CAJA_URL, true);
-// La primera pestaña dinámica se agrega al hacer login
+function addDynamic() {
+  const i = addTab(DYN_LABEL, DYN_URL, false, false);
+  setActive(i);
+}
 
 /* ────────────────────────────────────────────────
-   LOGIN → APP
+   FAB — botones copiar
 ──────────────────────────────────────────────── */
-btnContinue.addEventListener('click', () => {
-  if (loggedIn) return;
-  loggedIn = true;
+document.getElementById('fab-copy-user').addEventListener('click', () =>
+  copyText(CRED.user, 'Usuario'));
+document.getElementById('fab-copy-pass').addEventListener('click', () =>
+  copyText(CRED.pass, 'Contraseña'));
 
-  // Ocultar UI de login, mostrar barra de pestañas
-  loginTop.style.display    = 'none';
-  loginBottom.style.display = 'none';
-  tabBar.classList.add('visible');
+/* ────────────────────────────────────────────────
+   SETUP — guardar credenciales y abrir sistema
+──────────────────────────────────────────────── */
 
-  // Activar la pestaña Inicio (orgFrame ya tiene la sesión)
+// Pre-rellenar usuario guardado
+inputUser.value = localStorage.getItem('cp_user') || '';
+
+btnSetup.addEventListener('click', () => {
+  const u = inputUser.value.trim();
+  const p = inputPass.value;
+  if (!u || !p) { showToast('Completá usuario y contraseña'); return; }
+
+  CRED.user = u;
+  CRED.pass = p;
+  localStorage.setItem('cp_user', u);   // solo username, nunca la contraseña
+  fabUserTxt.textContent = u;
+
+  // Ocultar setup, mostrar app
+  setupEl.style.display = 'none';
+  appEl.classList.add('visible');
+
+  // Construir pestañas
+  ORG_TABS.forEach(t => addTab(t.label, t.url, true,  true));
+  addTab('Caja', CAJA_URL, true,  false);
+  addTab(DYN_LABEL, DYN_URL, false, false);
+
+  // Activar pestaña 0 (Inicio) — auto-copia contraseña
   setActive(0);
-
-  // Agregar primera pestaña dinámica (carga lazy)
-  addIframeTab(DYN_LABEL, DYN_URL, false);
 });
 
-/* ────────────────────────────────────────────────
-   F5 → recarga solo la pestaña activa
-──────────────────────────────────────────────── */
-document.addEventListener('keydown', e => {
-  if (e.key === 'F5') {
-    e.preventDefault();
-    if (loggedIn) reloadActive();
-  }
-});
+// Enter en el form
+inputPass.addEventListener('keydown', e => { if (e.key === 'Enter') btnSetup.click(); });
+inputUser.addEventListener('keydown', e => { if (e.key === 'Enter') inputPass.focus(); });
 
 /* ────────────────────────────────────────────────
-   BOTÓN NUEVO COMPROBANTE
+   BOTONES BARRA
 ──────────────────────────────────────────────── */
+btnReload.addEventListener('click', reloadActive);
 btnNew.addEventListener('click', addDynamic);
 
 /* ────────────────────────────────────────────────
-   PWA SERVICE WORKER
+   F5 — intento de intercepción
+   NOTA: cuando el iframe tiene el foco (el usuario
+   está interactuando dentro de él), el navegador
+   maneja F5 antes de que nuestro JS lo vea, y
+   recarga la página principal. En ese caso usá
+   el botón ⟳ de la barra.
+──────────────────────────────────────────────── */
+window.addEventListener('keydown', e => {
+  if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    reloadActive();
+  }
+}, true); // capture: true = antes que cualquier otro handler
+
+/* ────────────────────────────────────────────────
+   PWA
 ──────────────────────────────────────────────── */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
