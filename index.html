@@ -7,43 +7,46 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Che Plast">
-  <meta name="theme-color" content="#1c2800">
+  <meta name="theme-color" content="#0d0800">
   <title>Che Plast</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* ── CHICHA PERUANA ──────────────────────────────
+       Paleta inspirada en los afiches chicha:
+       amarillo dorado · rosa fuerte · naranja · verde neón
+    ─────────────────────────────────────────────── */
     :root {
-      /* Colors derived from logo (lime/yellow-green palette) */
-      --bar-bg:      #1c2800;
-      --bar-hover:   #2c3e00;
-      --bar-border:  #0e1700;
-      --accent:      #93b800;   /* logo lime green */
-      --accent-dim:  #5a7200;
-      --tab-active:  #f5fce8;   /* very light lime tint */
-      --tab-active-txt: #1c2800;
-      --btn-bg:      #6b8800;
-      --btn-hover:   #4e6500;
-      --text-dim:    #8fa066;
-      --text-light:  #c8d8a0;
-      --bar-h:       46px;
-      --safe-top:    env(safe-area-inset-top, 0px);
-      --safe-bot:    env(safe-area-inset-bottom, 0px);
+      --bg:        #0d0800;
+      --bg2:       #1a1000;
+      --border:    #3d2200;
+      --yellow:    #FFD700;
+      --pink:      #FF006E;
+      --orange:    #FF5500;
+      --green:     #00E676;
+      --red:       #CC0033;
+      --dim:       #CC8833;
+      --bright:    #FFB833;
+      --bar-h:     46px;
+      --safe-top:  env(safe-area-inset-top, 0px);
+      --safe-bot:  env(safe-area-inset-bottom, 0px);
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       overflow: hidden;
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      background: var(--bar-bg);
+      background: var(--bg);
       -webkit-tap-highlight-color: transparent;
       -webkit-text-size-adjust: 100%;
     }
 
-    #app {
+    /* ── SHELL ───────────────────────────────────── */
+    #shell {
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -51,80 +54,143 @@
       padding-bottom: var(--safe-bot);
     }
 
-    /* ── Tab bar ──────────────────────────────────── */
-    #tab-bar {
+    /* ── LOGIN TOP ───────────────────────────────── */
+    #login-top {
       display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #200a00, #0d0800);
+      border-bottom: 3px solid var(--yellow);
+      flex-shrink: 0;
+    }
+    #login-top img {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,215,0,.5);
+    }
+    #login-logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    #login-logo-text h1 {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--yellow);
+      letter-spacing: .12em;
+      text-shadow: 0 0 14px rgba(255,215,0,.5);
+    }
+    #login-logo-text p {
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: .04em;
+    }
+
+    /* ── LOGIN BOTTOM ────────────────────────────── */
+    #login-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, #0d0800, #200a00);
+      border-top: 3px solid var(--pink);
+      flex-shrink: 0;
+    }
+    #login-hint {
+      font-size: 12px;
+      color: var(--dim);
+      text-align: center;
+    }
+    #btn-continue {
+      padding: 11px 28px;
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s;
+      box-shadow: 0 4px 18px rgba(255,0,110,.4);
+      white-space: nowrap;
+    }
+    #btn-continue:hover  { background: #FF3399; box-shadow: 0 4px 22px rgba(255,0,110,.6); }
+    #btn-continue:active { transform: scale(.97); }
+
+    /* ── TAB BAR ─────────────────────────────────── */
+    #tab-bar {
+      display: none;
       align-items: stretch;
-      background: var(--bar-bg);
+      background: var(--bg);
       height: var(--bar-h);
       overflow-x: auto;
       overflow-y: hidden;
       scrollbar-width: none;
       flex-shrink: 0;
-      border-bottom: 2px solid var(--bar-border);
+      border-bottom: 2px solid var(--border);
       -webkit-overflow-scrolling: touch;
     }
+    #tab-bar.visible { display: flex; }
     #tab-bar::-webkit-scrollbar { display: none; }
 
-    /* ── Tab ──────────────────────────────────────── */
+    /* ── TAB ─────────────────────────────────────── */
     .tab {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 0 15px;
-      min-width: 120px;
-      max-width: 185px;
+      gap: 5px;
+      padding: 0 14px;
+      min-width: 110px;
+      max-width: 175px;
       min-height: var(--bar-h);
       white-space: nowrap;
       cursor: pointer;
-      color: var(--text-dim);
+      color: var(--dim);
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       flex-shrink: 0;
-      border-right: 1px solid var(--bar-border);
-      transition: background .15s, color .15s;
+      border-right: 1px solid var(--border);
+      transition: background .15s, color .12s;
       user-select: none;
       -webkit-user-select: none;
       position: relative;
     }
-    .tab:hover { background: var(--bar-hover); color: var(--text-light); }
+    .tab:hover { background: var(--bg2); color: var(--bright); }
     .tab.active {
-      background: var(--tab-active);
-      color: var(--tab-active-txt);
-      font-weight: 600;
+      background: var(--yellow);
+      color: #0d0800;
+      font-weight: 800;
     }
-    /* Active indicator bar */
     .tab.active::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 3px;
-      background: var(--accent);
+      background: var(--pink);
     }
-
     .tab-label { overflow: hidden; text-overflow: ellipsis; flex: 1; }
 
-    /* ── Close button ─────────────────────────────── */
+    /* ── CLOSE ───────────────────────────────────── */
     .tab-close {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 19px; height: 19px;
       border: none;
       background: transparent;
       border-radius: 50%;
       cursor: pointer;
       font-size: 11px;
       flex-shrink: 0;
-      padding: 0;
       color: inherit;
-      opacity: .55;
+      opacity: .5;
       transition: background .12s, opacity .12s;
     }
-    .tab-close:hover { background: #c0392b; color: #fff; opacity: 1; }
+    .tab-close:hover { background: var(--orange); color: #fff; opacity: 1; }
 
-    /* ── Nuevo Comprobante button ──────────────────── */
+    /* ── NUEVO COMPROBANTE BTN ───────────────────── */
     #btn-new {
       display: flex;
       align-items: center;
@@ -133,42 +199,25 @@
       min-height: var(--bar-h);
       flex-shrink: 0;
       border: none;
-      background: var(--btn-bg);
-      color: #e8f4c0;
+      background: var(--orange);
+      color: #fff;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
       cursor: pointer;
       white-space: nowrap;
-      transition: background .15s;
       margin-left: auto;
-      letter-spacing: .01em;
+      transition: background .15s;
     }
-    #btn-new:hover { background: var(--btn-hover); }
-    #btn-new svg { flex-shrink: 0; }
+    #btn-new:hover { background: var(--pink); }
 
-    /* ── Loading indicator ────────────────────────── */
-    .frame-wrap::before {
-      content: 'Cargando…';
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      color: var(--text-dim);
-      background: var(--bar-bg);
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity .3s;
-    }
-    .frame-wrap.loaded::before { opacity: 0; pointer-events: none; }
-
-    /* ── Content area ─────────────────────────────── */
+    /* ── CONTENT ─────────────────────────────────── */
     #content {
       flex: 1;
       position: relative;
       overflow: hidden;
-      background: var(--bar-bg);
+      background: var(--bg);
     }
 
     .frame-wrap {
@@ -180,6 +229,23 @@
     }
     .frame-wrap.active { display: block; }
 
+    /* Loading shimmer */
+    .frame-wrap::before {
+      content: 'Cargando…';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--dim);
+      font-size: 15px;
+      font-weight: 600;
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    .frame-wrap.loaded::before { opacity: 0; }
+
     iframe {
       width: 100%;
       height: 100%;
@@ -187,195 +253,332 @@
       display: block;
     }
 
-    /* ── F5 toast hint (desktop only) ─────────────── */
+    /* ── TOAST ───────────────────────────────────── */
     #toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: #333;
-      color: #fff;
-      padding: 8px 18px;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--yellow);
+      color: #0d0800;
+      padding: 8px 20px;
       border-radius: 20px;
       font-size: 13px;
+      font-weight: 800;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .25s, transform .25s;
+      transition: opacity .2s, transform .2s;
       z-index: 9999;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Mobile ───────────────────────────────────── */
+    /* ── MOBILE ──────────────────────────────────── */
     @media (max-width: 600px) {
       :root { --bar-h: 44px; }
-      .tab { min-width: 85px; padding: 0 10px; font-size: 12px; }
-      #btn-new { padding: 0 12px; font-size: 12px; gap: 4px; }
+      .tab { min-width: 80px; padding: 0 10px; font-size: 12px; }
+      #btn-new { padding: 0 10px; font-size: 11px; gap: 4px; }
+      #login-hint { display: none; }
+      #btn-continue { padding: 10px 20px; font-size: 13px; }
     }
   </style>
 </head>
 
 <body>
-<div id="app">
+<div id="shell">
+
+  <!-- ── Login header ──────────────────────────── -->
+  <div id="login-top">
+    <img src="icons/apple-touch-icon.png" alt="Che Plast">
+    <div id="login-logo-text">
+      <h1>CHE PLAST</h1>
+      <p>Sistema de gestión interno</p>
+    </div>
+  </div>
+
+  <!-- ── Tab bar (hidden until login complete) ─── -->
   <div id="tab-bar">
-    <button id="btn-new" aria-label="Abrir nuevo comprobante">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-        <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    <button id="btn-new">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
       </svg>
       Nuevo Comprobante
     </button>
   </div>
+
+  <!-- ── Content: iframes viven aquí siempre ───── -->
   <div id="content"></div>
+
+  <!-- ── Login footer ──────────────────────────── -->
+  <div id="login-bottom">
+    <span id="login-hint">Iniciá sesión en el formulario de arriba, luego presioná el botón →</span>
+    <button id="btn-continue">Ya ingresé &mdash; Continuar &#x279C;</button>
+  </div>
+
 </div>
 <div id="toast"></div>
 
 <script>
-  // ── Config ──────────────────────────────────────────
-  const FIXED = [
-    { label: 'Inicio',         url: 'https://cheplast.organizatic.com/principal#/' },
-    { label: 'Notas de Venta', url: 'https://cheplast.organizatic.com/principal#/notas-venta' },
-    { label: 'Documentos',     url: 'https://cheplast.organizatic.com/principal#/documentos' },
-    { label: 'Caja',           url: 'https://ahhm0699.github.io/PROGRAMA-CAJA/' },
-  ];
-  const DYN_LABEL = 'Nuevo Comprobante';
-  const DYN_URL   = 'https://cheplast.organizatic.com/principal#/documentos/crear';
-  const FIXED_N   = FIXED.length;
+/* ────────────────────────────────────────────────
+   CONFIG
+──────────────────────────────────────────────── */
+const ORG_BASE = 'https://cheplast.organizatic.com/principal';
 
-  // ── DOM refs ────────────────────────────────────────
-  const tabBar = document.getElementById('tab-bar');
-  const btnNew = document.getElementById('btn-new');
-  const content = document.getElementById('content');
-  const toast  = document.getElementById('toast');
+// Las 3 pestañas de organizatic comparten UN SOLO iframe
+// Esto elimina por completo el conflicto de sesión/credenciales
+const ORG_TABS = [
+  { label: 'Inicio',         hash: '#/' },
+  { label: 'Notas de Venta', hash: '#/notas-venta' },
+  { label: 'Documentos',     hash: '#/documentos' },
+];
+const CAJA_URL  = 'https://ahhm0699.github.io/PROGRAMA-CAJA/';
+const DYN_LABEL = 'Nuevo Comprobante';
+const DYN_URL   = ORG_BASE + '#/documentos/crear';
 
-  let tabs   = [];   // { id, el, wrap, frame, url, fixed }
-  let active = 0;
-  let uid    = 0;
+/* ────────────────────────────────────────────────
+   DOM
+──────────────────────────────────────────────── */
+const loginTop    = document.getElementById('login-top');
+const loginBottom = document.getElementById('login-bottom');
+const tabBar      = document.getElementById('tab-bar');
+const btnNew      = document.getElementById('btn-new');
+const content     = document.getElementById('content');
+const toast       = document.getElementById('toast');
+const btnContinue = document.getElementById('btn-continue');
 
-  // ── Toast ───────────────────────────────────────────
-  let toastTimer;
-  function showToast(msg, ms = 1800) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), ms);
+/* ────────────────────────────────────────────────
+   TOAST
+──────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg, ms = 1800) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), ms);
+}
+
+/* ────────────────────────────────────────────────
+   IFRAME COMPARTIDO para las 3 pestañas organizatic
+   Un solo contexto de sesión → sin conflictos de login
+──────────────────────────────────────────────── */
+const orgWrap = document.createElement('div');
+orgWrap.className = 'frame-wrap active';  // visible durante login
+
+const orgFrame = document.createElement('iframe');
+orgFrame.src = ORG_BASE + '#/';          // carga el login de organizatic
+orgFrame.allow = 'clipboard-read; clipboard-write; fullscreen';
+orgFrame.addEventListener('load', () => orgWrap.classList.add('loaded'));
+orgWrap.appendChild(orgFrame);
+content.appendChild(orgWrap);
+
+let activeOrgHash = '#/';   // hash actualmente cargado en orgFrame
+
+/* ────────────────────────────────────────────────
+   ESTADO DE PESTAÑAS
+──────────────────────────────────────────────── */
+let tabs    = [];  // { id, el, label, isOrg, orgHash?, wrap?, frame?, fixed }
+let active  = 0;
+let loggedIn = false;
+let uid      = 0;
+
+/* ────────────────────────────────────────────────
+   CREAR ELEMENTO PESTAÑA (solo UI)
+──────────────────────────────────────────────── */
+function makeTabEl(label, fixed, meta) {
+  const id = 't' + (++uid);
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.setAttribute('role', 'tab');
+  el.setAttribute('aria-selected', 'false');
+  el.innerHTML = `<span class="tab-label" title="${label}">${label}</span>`;
+
+  if (!fixed) {
+    const btn = document.createElement('button');
+    btn.className = 'tab-close';
+    btn.innerHTML = '&#x2715;';
+    btn.setAttribute('aria-label', 'Cerrar');
+    btn.addEventListener('click', e => { e.stopPropagation(); removeTab(id); });
+    el.appendChild(btn);
   }
 
-  // ── Create tab ──────────────────────────────────────
-  function addTab(label, url, fixed) {
-    const id = 't' + (++uid);
-
-    // Tab pill
-    const el = document.createElement('div');
-    el.className = 'tab';
-    el.setAttribute('role', 'tab');
-    el.innerHTML = `<span class="tab-label" title="${label}">${label}</span>`;
-
-    if (!fixed) {
-      const btn = document.createElement('button');
-      btn.className = 'tab-close';
-      btn.innerHTML = '&#x2715;';
-      btn.setAttribute('aria-label', 'Cerrar');
-      btn.addEventListener('click', e => { e.stopPropagation(); removeTab(id); });
-      el.appendChild(btn);
-    }
-
-    el.addEventListener('click', () => {
-      const i = tabs.findIndex(t => t.id === id);
-      if (i >= 0) setActive(i);
-    });
-
-    // Double-tap active tab on mobile → reload
-    let tapTime = 0;
-    el.addEventListener('touchend', () => {
-      const now = Date.now();
-      const i = tabs.findIndex(t => t.id === id);
-      if (i === active && now - tapTime < 320) reloadActive();
-      tapTime = now;
-    });
-
-    tabBar.insertBefore(el, btnNew);
-
-    // iframe wrapper (LAZY: src not set yet)
-    const wrap = document.createElement('div');
-    wrap.className = 'frame-wrap';
-    const frame = document.createElement('iframe');
-    frame.dataset.src = url;   // store URL, load lazily
-    frame.allow = 'clipboard-read; clipboard-write; fullscreen';
-    frame.addEventListener('load', () => wrap.classList.add('loaded'));
-    wrap.appendChild(frame);
-    content.appendChild(wrap);
-
-    tabs.push({ id, el, wrap, frame, url, fixed });
-    return tabs.length - 1;
-  }
-
-  // ── Remove tab ──────────────────────────────────────
-  function removeTab(id) {
-    const dynCount = tabs.filter(t => !t.fixed).length;
-    if (dynCount <= 1) {
-      showToast('Debe quedar al menos un comprobante abierto');
-      return;
-    }
+  el.addEventListener('click', () => {
     const i = tabs.findIndex(t => t.id === id);
-    if (i < 0 || tabs[i].fixed) return;
-    tabs[i].el.remove();
-    tabs[i].wrap.remove();
-    tabs.splice(i, 1);
-    setActive(Math.min(active, tabs.length - 1));
+    if (i >= 0) setActive(i);
+  });
+
+  // Doble toque en pestaña activa = recargar (móvil)
+  let lastTap = 0;
+  el.addEventListener('touchend', () => {
+    const now = Date.now();
+    const i = tabs.findIndex(t => t.id === id);
+    if (i === active && now - lastTap < 320) reloadActive();
+    lastTap = now;
+  });
+
+  tabBar.insertBefore(el, btnNew);
+  const entry = { id, el, label, fixed, ...meta };
+  tabs.push(entry);
+  return tabs.length - 1;
+}
+
+/* ────────────────────────────────────────────────
+   PESTAÑA CON IFRAME PROPIO (Caja + dinámicas)
+──────────────────────────────────────────────── */
+function addIframeTab(label, url, fixed) {
+  const wrap  = document.createElement('div');
+  wrap.className = 'frame-wrap';
+  const frame = document.createElement('iframe');
+  frame.dataset.src = url;
+  frame._loaded = false;
+  frame.allow = 'clipboard-read; clipboard-write; fullscreen';
+  frame.addEventListener('load', () => wrap.classList.add('loaded'));
+  wrap.appendChild(frame);
+  content.appendChild(wrap);
+  return makeTabEl(label, fixed, { isOrg: false, wrap, frame });
+}
+
+/* ────────────────────────────────────────────────
+   PESTAÑA DINÁMICA (Nuevo Comprobante)
+──────────────────────────────────────────────── */
+function addDynamic() {
+  const i = addIframeTab(DYN_LABEL, DYN_URL, false);
+  setActive(i);
+  // Carga inmediata (el usuario la abrió a propósito)
+  const t = tabs[i];
+  if (!t.frame._loaded) {
+    t.frame.src = t.frame.dataset.src;
+    t.frame._loaded = true;
   }
+}
 
-  // ── Activate tab ────────────────────────────────────
-  function setActive(i) {
-    active = i;
-    tabs.forEach((t, idx) => {
-      const on = idx === i;
-      t.el.classList.toggle('active', on);
-      t.el.setAttribute('aria-selected', on);
-      t.wrap.classList.toggle('active', on);
+/* ────────────────────────────────────────────────
+   CERRAR PESTAÑA
+──────────────────────────────────────────────── */
+function removeTab(id) {
+  const dynCount = tabs.filter(t => !t.fixed).length;
+  if (dynCount <= 1) {
+    showToast('Debe quedar al menos un comprobante abierto');
+    return;
+  }
+  const i = tabs.findIndex(t => t.id === id);
+  if (i < 0 || tabs[i].fixed) return;
+  tabs[i].el.remove();
+  tabs[i].wrap?.remove();
+  tabs.splice(i, 1);
+  setActive(Math.min(active, tabs.length - 1));
+}
 
-      // Lazy-load: set src on first activation
-      if (on && !t.frame.src) {
-        t.frame.src = t.frame.dataset.src;
+/* ────────────────────────────────────────────────
+   ACTIVAR PESTAÑA
+──────────────────────────────────────────────── */
+function setActive(i) {
+  active = i;
+  const t = tabs[i];
+  if (!t) return;
+
+  tabs.forEach((tt, idx) => {
+    const on = idx === i;
+    tt.el.classList.toggle('active', on);
+    tt.el.setAttribute('aria-selected', String(on));
+
+    if (!tt.isOrg && tt.wrap) {
+      tt.wrap.classList.toggle('active', on);
+      // Carga lazy: solo carga cuando se activa por primera vez
+      if (on && !tt.frame._loaded) {
+        tt.frame.src = tt.frame.dataset.src;
+        tt.frame._loaded = true;
       }
-    });
-    tabs[i]?.el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  }
-
-  // ── Reload active iframe ─────────────────────────────
-  function reloadActive() {
-    const t = tabs[active];
-    if (!t) return;
-    const origSrc = t.frame.dataset.src;
-    t.wrap.classList.remove('loaded');
-    t.frame.src = 'about:blank';
-    setTimeout(() => { t.frame.src = origSrc; }, 30);
-    showToast('Recargando…');
-  }
-
-  // ── Add dynamic tab ─────────────────────────────────
-  function addDynamic() {
-    const i = addTab(DYN_LABEL, DYN_URL, false);
-    setActive(i);
-  }
-
-  // ── Keyboard: F5 reloads active iframe only ──────────
-  document.addEventListener('keydown', e => {
-    if (e.key === 'F5') {
-      e.preventDefault();
-      reloadActive();
     }
   });
 
-  // ── Init ────────────────────────────────────────────
-  FIXED.forEach(t => addTab(t.label, t.url, true));
-  addDynamic();
-  setActive(0);   // Only tab 0 loads immediately; others load on first click
-
-  btnNew.addEventListener('click', addDynamic);
-
-  // ── PWA ─────────────────────────────────────────────
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (t.isOrg) {
+    // Mostrar iframe compartido y navegar al hash correspondiente
+    orgWrap.classList.add('active');
+    if (t.orgHash !== activeOrgHash) {
+      orgFrame.src = ORG_BASE + t.orgHash;
+      activeOrgHash = t.orgHash;
+    }
+  } else {
+    orgWrap.classList.remove('active');
   }
+
+  tabs[i].el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+/* ────────────────────────────────────────────────
+   RECARGAR PESTAÑA ACTIVA (F5 / doble toque)
+──────────────────────────────────────────────── */
+function reloadActive() {
+  const t = tabs[active];
+  if (!t) return;
+
+  if (t.isOrg) {
+    // Recarga forzada con query único (preserva sessionStorage del iframe)
+    orgWrap.classList.remove('loaded');
+    orgFrame.src = ORG_BASE + '?r=' + Date.now() + t.orgHash;
+    activeOrgHash = t.orgHash;
+  } else {
+    const src = t.frame.dataset.src;
+    t.wrap.classList.remove('loaded');
+    t.frame._loaded = false;
+    t.frame.src = 'about:blank';
+    setTimeout(() => {
+      t.frame.src = src;
+      t.frame._loaded = true;
+    }, 30);
+  }
+  showToast('Recargando…');
+}
+
+/* ────────────────────────────────────────────────
+   INIT: construir pestañas ANTES del login
+   (iframes org y caja no cargan hasta que el
+    usuario haga clic en ellas, excepto el orgFrame
+    que carga el login de organizatic de inmediato)
+──────────────────────────────────────────────── */
+ORG_TABS.forEach(t => makeTabEl(t.label, true, { isOrg: true, orgHash: t.hash }));
+addIframeTab('Caja', CAJA_URL, true);
+// La primera pestaña dinámica se agrega al hacer login
+
+/* ────────────────────────────────────────────────
+   LOGIN → APP
+──────────────────────────────────────────────── */
+btnContinue.addEventListener('click', () => {
+  if (loggedIn) return;
+  loggedIn = true;
+
+  // Ocultar UI de login, mostrar barra de pestañas
+  loginTop.style.display    = 'none';
+  loginBottom.style.display = 'none';
+  tabBar.classList.add('visible');
+
+  // Activar la pestaña Inicio (orgFrame ya tiene la sesión)
+  setActive(0);
+
+  // Agregar primera pestaña dinámica (carga lazy)
+  addIframeTab(DYN_LABEL, DYN_URL, false);
+});
+
+/* ────────────────────────────────────────────────
+   F5 → recarga solo la pestaña activa
+──────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'F5') {
+    e.preventDefault();
+    if (loggedIn) reloadActive();
+  }
+});
+
+/* ────────────────────────────────────────────────
+   BOTÓN NUEVO COMPROBANTE
+──────────────────────────────────────────────── */
+btnNew.addEventListener('click', addDynamic);
+
+/* ────────────────────────────────────────────────
+   PWA SERVICE WORKER
+──────────────────────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
